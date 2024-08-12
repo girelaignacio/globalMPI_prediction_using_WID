@@ -33,13 +33,24 @@ This is a basic example which shows you how to solve a common problem:
 devtools::load_all()
 ## basic example code
 ```
+# Distribution of the folders
 
-What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
+research_project/
+├── data/
+│   ├── raw_data/
+│   ├── processed_data/
+│   └── analysis_results/
+├── code/
+│   ├── data_preprocessing.py
+│   ├── analysis_script.py
+│   └── visualization.py
+├── documentation/
+│   ├── README.md
+│   ├── data_dictionary.csv
+│   └── methodology.pdf
+├── figures/
+├── results/
+└── reports/
 
-```{r cars}
-summary(cars)
-```
-
-You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date. `devtools::build_readme()` is handy for this.
 
 

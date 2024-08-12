@@ -3,7 +3,7 @@
 \docType{data}
 \name{globalMPI_all_years_raw}
 \alias{globalMPI_all_years_raw}
-\title{This is data to be included in my package}
+\title{This is the Data Table 1: National Results of the global MPI results 2022}
 \format{
 An object of class \code{data.frame} with 444 rows and 7 columns.
 }
@@ -11,10 +11,10 @@ An object of class \code{data.frame} with 444 rows and 7 columns.
 globalMPI_all_years_raw
 }
 \description{
-This is data to be included in my package
+This is the Data Table 1: National Results of the global MPI results 2022
 }
 \references{
-\url{data_blah.com}
+\url{https://ophi.org.uk/sites/default/files/2024-02/table-1-national-results-mpi-2022.xlsx}
 }
 \author{
 OPHI-UNDP
