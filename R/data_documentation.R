@@ -25,5 +25,36 @@
 #' @keywords Webscrapping, global MPI, World Indicators Database
 "webscrapped_data_experiment3"
 
+#' This is a raw dataframe that contains information about ISO codes and World Regions (it is used to add the World Regions as predictors)
+#'
+#' @name regions_data_raw
+#' @docType data
+#' @author World Bank
+#' @keywords World Regions, ISO Code, World Bank
+"regions_data_raw"
+
+#' This is a raw dataframe that contains variables names of the WID (it is used to remove special characters)
+#'
+#' @name variables_data_raw
+#' @docType data
+#' @author World Bank
+#' @keywords  World Indicators Database
+"variables_data_raw"
+
+#' This is the processed dataframe 1 used in the paper (See Table in Annex)
+#'
+#' @name dataframe1
+#' @docType data
+#' @author World Bank
+#' @keywords  World Indicators Database
+"dataframe1"
+
+#' This is the processed dataframe 2 used in the paper (See Table in Annex)
+#'
+#' @name dataframe2
+#' @docType data
+#' @author World Bank
+#' @keywords  World Indicators Database
+"dataframe2"
 
 

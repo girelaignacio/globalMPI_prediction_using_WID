@@ -48,6 +48,10 @@ for (i in 2:21){
   total <- merge(total,data3, by=c("iso","country","year","MPI","H","A","variable"))
 }
 
+# save it
+webscrapped_data_experiments1and2 <- total
+usethis::use_data(webscrapped_data_experiments1and2, overwrite = T)
+
 # Create data 2 -----------------------------------------------------------
 # This functions create the raw data for experiment 3 in the paper
 # prior to NAs treatment
@@ -67,3 +71,8 @@ for (i in 2:21){
   data_long_i <- WB_data_long(data_i)
   total <- merge(total, data_long_i, all.x = TRUE)
 }
+
+# save it
+webscrapped_data_experiments3 <- total
+usethis::use_data(webscrapped_data_experiments1and2, overwrite = T)
+
