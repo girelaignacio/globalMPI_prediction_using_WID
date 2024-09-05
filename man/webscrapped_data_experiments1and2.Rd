@@ -5,7 +5,7 @@
 \alias{webscrapped_data_experiments1and2}
 \title{This is the web scrapped data for experiments 1 and 2}
 \format{
-An object of class \code{data.frame} with 249 rows and 1485 columns.
+An object of class \code{data.frame} with 248 rows and 1478 columns.
 }
 \usage{
 webscrapped_data_experiments1and2
