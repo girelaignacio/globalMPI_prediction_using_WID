@@ -1,5 +1,6 @@
 ^globalMPI_prediction_using_WID\.Rproj$
 ^\.Rproj\.user$
 ^scripts$
+^results$
 ^LICENSE\.md$
 ^README\.Rmd$

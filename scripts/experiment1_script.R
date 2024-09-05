@@ -1,5 +1,4 @@
 #### EXPERIMENT 1 SCRIPT FILE ####
-devtools::install_github("https://github.com/girelaignacio/globalMPI_prediction_using_WID")
 
 # The experiment depends mainly on the data set used for the
 # experiment (see Table in Annex) and the target variable (MPI,H,A).
@@ -7,24 +6,32 @@ devtools::install_github("https://github.com/girelaignacio/globalMPI_prediction_
 # target. To reproduce the code just change the desired dataframe1
 # and target variable.
 
+
+# Install the last version ------------------------------------------------
+
+devtools::install_github("https://github.com/girelaignacio/globalMPI_prediction_using_WID")
+
 # Load data ---------------------------------------------------------------
 
-data <- dataframe1
+which_data <- 1 # Which dataframe will be used (see Tale in Annex)
+if (which_data == 1){
+  data <- globalMPI.prediction.using.WID::dataframe1
+  } else if (which_data == 2){
+    data <- globalMPI.prediction.using.WID::dataframe2
+  } else if (which_data == 13){
+    data <- globalMPI.prediction.using.WID::dataframe13
+  }
 
 # Set parameters ----------------------------------------------------------
 
-target <- c("MPI")
-nfolds <- 5
-methods <- c("elasticnet","betaboost")
-split_size <- 0.8
+target <- c("MPI") # Target variable
+nfolds <- 5        # Number of folds
+methods <- c("elasticnet","betaboost") # Method to be used in estimation
+split_size <- 0.8 # Split proportion train and test
 
 R <- 1 # Repetitions
 
-
-main_function(data = data, target = target, nfolds = nfolds,
-              methods = methods, split_size = split_size)
-
-# Run parallelized code ---------------------------------------------------
+# Run paralleled code ---------------------------------------------------
 
 library(doParallel)
 
@@ -42,7 +49,7 @@ foreach::getDoParWorkers()
 
 experiment_start <- Sys.time()
 results <- foreach(i = 1:R) %dopar% {
-  main_function(data = data, target = target, nfolds = nfolds,
+  globalMPI.prediction.using.WID::main_function(data = data, target = target, nfolds = nfolds,
                 methods = methods, split_size = split_size)
 }
 experiment_end <- Sys.time()
@@ -51,6 +58,14 @@ experiment_time
 
 parallel::stopCluster(cl = cl)
 
-# end of code
 
-apply((do.call("cbind",results) - ytest)^2, 2, mean)
+# Save results ------------------------------------------------------------
+
+filename <- paste(getwd(),"/results/results_reps",
+                  paste(R,target,paste("df",which_data, sep = ""), sep="_"),
+                  sep = "")
+saveRDS(results,file = filename)
+
+# Load results to check!
+load_results <- readRDS(filename)
+
