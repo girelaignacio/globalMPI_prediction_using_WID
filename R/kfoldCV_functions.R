@@ -30,25 +30,19 @@ kfoldCV.elastic <- function(Xtrain, ytrain, nfolds) {
 # Betaboost ---------------------------------------------------------------
 
 kfoldCV.betaboost <- function(data, nfolds) {
-  print("kfold working")
   K <- nfolds
   n <- nrow(data)
   id <- sample(1:K, n, replace=TRUE, prob=rep(1/K,K))
-  print(id)
   # Hyperparameters
   hyper_max_depth <- c(3,5,7)
 
   # empty array to save results
   results <- array(NA, dim=c(length(hyper_max_depth),K))
-  print("Here it will start estimating")
   for(lambda in 1:length(hyper_max_depth)){
     hyperparam <- hyper_max_depth[lambda]
-    print(paste("Hyperparam: ", hyperparam))
     for(i in 1:K){
       data_train.i <- data[id!=i,]
       data_test.i <- data[id==i,]
-
-      print(dim(data_train.i))
 
 
       betaboost.fit <- mboost::blackboost(y ~ ., data = data_train.i, family = betaboost::BetaReg(),
