@@ -42,11 +42,11 @@ main_function <- function(data = NULL, target = c("MPI","H","A"), nfolds = 5,
   #regions.cols <- which(grepl(pattern = "^df.region_", colnames(data_train)))
   # put regions apart..
 
-  predictions <- lapply(methods, FUN = function(x) {
+  predictions <- parallel::mclapply(methods, FUN = function(x) {
     switch(x,
            "elasticnet" = {method.elasticnet(Xtrain, ytrain, Xtest, nfolds)},
            "betaboost" = {method.betaboost(Xtrain, ytrain, Xtest, nfolds)})
-  })
+  }, mc.cores = length(methods))
 
   out <- do.call("cbind", predictions)
   ground.truth <- ytest

@@ -3,7 +3,7 @@
 # The experiment depends mainly on the data set used for the
 # experiment (see Table in Annex) and the target variable (MPI,H,A).
 # In this script we have the example of dataframe 1 and MPI as the
-# target. To reproduce the code just change the desired dataframe1
+# target. To reproduce the code just change the desired data frame
 # and target variable.
 
 
