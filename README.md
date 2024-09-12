@@ -1,12 +1,16 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# Global Multidimensional Poverty Prediction Using World Bank Indicators: A Machine Learning Approach
+# Global Multidimensional Poverty Prediction Using World Bank Indicators
 
 This repository contains the codes and auxiliary files to reproduce the
 results of the paper “Global Multidimensional Poverty Prediction Using
-World Bank Indicators: A Machine Learning Approach” (2024) García
-Arancibia, R.; Girela, I. & González, D.
+World Bank Indicators: A Machine Learning Approach” (2024) Girela, I.;
+García Arancibia, R. & González, D.
+
+## Abstract of the paper
+
+Abstract
 
 ## Introduction
 
@@ -17,17 +21,7 @@ from [GitHub](https://github.com/) with:
 devtools::install_github("girelaignacio/globalMPI_prediction_using_WID")
 ```
 
-## Example
-
-This is a basic example which shows you how to solve a common problem:
-
-``` r
-devtools::load_all()
-#> ℹ Loading globalMPI.prediction.using.WID
-## basic example code
-```
-
-# Distribution of the folders
+## Distribution of the folders
 
 research_project/ ├── data/ │ ├── raw_data/ │ ├── processed_data/ │ └──
 analysis_results/ ├── code/ │ ├── data_preprocessing.py │ ├──

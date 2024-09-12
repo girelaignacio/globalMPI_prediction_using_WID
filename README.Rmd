@@ -13,9 +13,13 @@ knitr::opts_chunk$set(
 )
 ```
 
-# Global Multidimensional Poverty Prediction Using World Bank Indicators: A Machine Learning Approach
+# Global Multidimensional Poverty Prediction Using World Bank Indicators
 
-This repository contains the codes and auxiliary files to reproduce the results of the paper "Global Multidimensional Poverty Prediction Using World Bank Indicators: A Machine Learning Approach" (2024) García Arancibia, R.; Girela, I. & González, D.
+This repository contains the codes and auxiliary files to reproduce the results of the paper "Global Multidimensional Poverty Prediction Using World Bank Indicators: A Machine Learning Approach" (2024) Girela, I.; García Arancibia, R. & González, D.
+
+## Abstract of the paper
+
+Abstract
 
 ## Introduction
 
@@ -25,15 +29,7 @@ To reproduce the results you can install the version of this project from [GitHu
 devtools::install_github("girelaignacio/globalMPI_prediction_using_WID")
 ```
 
-## Example
-
-This is a basic example which shows you how to solve a common problem:
-
-```{r example}
-devtools::load_all()
-## basic example code
-```
-# Distribution of the folders
+## Distribution of the folders
 
 research_project/
 ├── data/
