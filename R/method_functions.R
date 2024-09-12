@@ -35,3 +35,40 @@ method.betaboost <- function(data_train, y_train, data_test, nfolds){
   colnames(ypred) <- "betaboost"
   return(ypred)
 }
+
+
+# linear-pls --------------------------------------------------------------
+
+method.linearpls <- function(data_train, y_train, data_test, nfolds, pls.directions = 30){
+  # Separate regions from data set
+  regions.cols_train <- which(grepl(pattern = "^df.region", colnames(data_train)))
+  regions.cols_test <- which(grepl(pattern = "^df.region", colnames(data_test)))
+  Rtrain <- data_train[,regions.cols_train]
+  Xtrain <- data_train[,-regions.cols_train]
+  Rtest <- data_test[,regions.cols_test]
+  Xtest <- data_test[,-regions.cols_test]
+  # Select hyperparameters
+  hyperparam <- kfoldCV.pls(data_train, y_train, nfolds, pls.directions)
+
+  # Fit model
+    # Estimate projections
+  pls.projections <- chemometrics::pls1_nipals(Xtrain, y_train, a = hyperparam$d.min, scale = TRUE)
+  datatrain <- as.data.frame(cbind(y_train, as.matrix(Xtrain) %*% pls.projections$W))
+  colnames(datatrain)[1] <- "y"
+  datatest <- data.frame(as.matrix(Xtest) %*% pls.projections$W)
+  colnames(datatest) <- colnames(datatrain)[-1]
+
+  # Train and test data with dimension reduction and dummies of time and region - formula of fit
+  datatrain <- data.frame(datatrain, Rtrain)
+  datatest <- data.frame(datatest, Rtest)
+
+  # Fit
+  pls.fit <- tryCatch(lm(y ~ . , datatrain), error= function(e) {return(NA)}  )
+
+  # Predict over test data
+  ypred <- predict(pls.fit, newdata = datatest)
+  ypred <- as.data.frame(ypred)
+  colnames(ypred) <- "linear-pls"
+  return(ypred)
+}
+
