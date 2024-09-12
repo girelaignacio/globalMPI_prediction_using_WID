@@ -1,10 +1,10 @@
 Package: globalMPI.prediction.using.WID
-Title: What the Package Does (One Line, Title Case)
+Title: Global MPI Prediction Using World Bank Development Indicators
 Version: 0.0.0.9000
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+    person("Ignacio", "Girela", , "ignacio.girela@unc.edi.ar", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0003-3297-3854"))
+Description: This package includes the code for reproducing the results of the paper.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
