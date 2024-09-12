@@ -19,4 +19,5 @@ Imports:
     reshape2,
     stats,
     tidyr,
-    utils
+    utils,
+    xgboost
