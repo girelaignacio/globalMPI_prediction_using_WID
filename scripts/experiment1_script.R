@@ -11,6 +11,11 @@
 
 devtools::install_github("https://github.com/girelaignacio/globalMPI_prediction_using_WID")
 
+
+# Load package ------------------------------------------------------------
+
+library(globalMPI.prediction.using.WID)
+
 # Load data ---------------------------------------------------------------
 
 which_data <- 1 # Which dataframe will be used (see Tale in Annex)
@@ -61,7 +66,7 @@ parallel::stopCluster(cl = cl)
 
 # Save results ------------------------------------------------------------
 
-filename <- paste(getwd(),"/results/results_reps",
+filename <- paste(getwd(),"/results/EXPERIMENT1_reps",
                   paste(R,target,paste("df",which_data, sep = ""), sep="_"),
                   sep = "")
 saveRDS(results,file = filename)
