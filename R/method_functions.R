@@ -72,3 +72,23 @@ method.linearpls <- function(data_train, y_train, data_test, nfolds, pls.directi
   return(ypred)
 }
 
+
+# xgboost -----------------------------------------------------------------
+
+method.xgboost <- function(data_train, y_train, data_test, nfolds){
+  # Select hyperparameters
+  hyperparam <- kfoldCV.xgboost(data_train, y_train, nfolds)
+    # This returns the best xgboost model
+
+  # Fitted model
+  xgb.fit <- xgboost::xgboost(params = hyperparam$xgb.params,
+                              data = as.matrix(data_train),
+                              label = y_train,
+                              nrounds = hyperparam$xgb.model, verbose = F, nthread = 5)
+  # Predict  over test data
+  ypred <- as.matrix(predict(xgb.fit, as.matrix(data_test)))
+
+  colnames(ypred) <- "xgboost"
+  return(ypred)
+}
+
