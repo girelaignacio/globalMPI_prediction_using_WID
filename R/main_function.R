@@ -37,11 +37,6 @@ main_function <- function(data = NULL, target = c("MPI","H","A"), nfolds = 5,
   Xtest <- split$data_test[,-which(colnames(split$data_train) %in% c("iso","region","country","year","mpi","h","a"))]
   rownames(Xtest) <- names(ytest) <- paste(split$data_test$country,split$data_test$year, sep = ".")
 
-
-  #for PLS....
-  #regions.cols <- which(grepl(pattern = "^df.region_", colnames(data_train)))
-  # put regions apart..
-
   predictions <- parallel::mclapply(methods, FUN = function(x) {
     switch(x,
            "elasticnet" = {method.elasticnet(Xtrain, ytrain, Xtest, nfolds)},
