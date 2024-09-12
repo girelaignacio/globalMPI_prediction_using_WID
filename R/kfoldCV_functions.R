@@ -119,7 +119,6 @@ kfoldCV.xgboost <- function(X, y, nfolds) {
   X <- as.matrix(X)
   Y <- as.matrix(y)
 
-  #train_control = caret::trainControl(method = "cv", number = nfolds)
   XGBparams <-  list(objective = "reg:squarederror",
                      max_depth = c(3,5,7),
                      # number of trees
@@ -137,10 +136,6 @@ kfoldCV.xgboost <- function(X, y, nfolds) {
                            verbose = F, nthread=2)
 
   optimal.rounds <- which.min(xgbcv$evaluation_log$test_rmse_mean)
-
-
-  #xgb.fit = caret::train(ytrain~., data = cbind(ytrain,Xtrain), method = "xgbTree", trControl = train_control, tuneGrid = gbmGrid, verbosity = 0)
-
 
   return(list( xgb.model = optimal.rounds, xgb.params = XGBparams))
 }

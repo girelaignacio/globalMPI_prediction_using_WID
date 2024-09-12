@@ -78,7 +78,6 @@ method.linearpls <- function(data_train, y_train, data_test, nfolds, pls.directi
 method.xgboost <- function(data_train, y_train, data_test, nfolds){
   # Select hyperparameters
   hyperparam <- kfoldCV.xgboost(data_train, y_train, nfolds)
-    # This returns the best xgboost model
 
   # Fitted model
   xgb.fit <- xgboost::xgboost(params = hyperparam$xgb.params,
