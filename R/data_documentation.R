@@ -41,20 +41,20 @@
 #' @keywords  World Indicators Database
 "variables_data_raw"
 
-#' This is the processed dataframe 1 used in the paper (See Table in Annex)
+#' This is the processed data set 1 used in the paper (See Table in Appendix)
 #'
-#' @name dataframe1
+#' @name dataset1
 #' @docType data
 #' @author World Bank
 #' @keywords  World Indicators Database
-"dataframe1"
+"dataset1"
 
-#' This is the processed dataframe 2 used in the paper (See Table in Annex)
+#' This is the processed data set 2 used in the paper (See Table in Appendix)
 #'
-#' @name dataframe2
+#' @name dataset2
 #' @docType data
 #' @author World Bank
 #' @keywords  World Indicators Database
-"dataframe2"
+"dataset2"
 
 

@@ -1,8 +1,8 @@
 #### EXPERIMENT 1 SCRIPT FILE ####
 
 # The experiment depends mainly on the data set used for the
-# experiment (see Table in Annex) and the target variable (MPI,H,A).
-# In this script we have the example of dataframe 1 and MPI as the
+# experiment (see Table in Appendix A) and the target variable (MPI,H,A).
+# In this script we have the example of data set 1 and MPI as the
 # target. To reproduce the code just change the desired data frame
 # and target variable.
 
@@ -18,7 +18,7 @@ library(globalMPI.prediction.using.WID)
 
 # Load data ---------------------------------------------------------------
 
-which_data <- 1 # Which dataframe will be used (see Tale in Annex)
+which_data <- 1 # Which data set will be used (see Table in Appendix A)
 if (which_data == 1){
   data <- globalMPI.prediction.using.WID::dataframe1
   } else if (which_data == 2){
@@ -29,9 +29,9 @@ if (which_data == 1){
 
 # Set parameters ----------------------------------------------------------
 
-target <- c("MPI") # Target variable
+target <- "MPI"    # Target variable
 nfolds <- 5        # Number of folds
-methods <- c("elasticnet","betaboost") # Method to be used in estimation
+#methods <- c("elasticnet","betaboost") # Method to be used in estimation
 split_size <- 0.8 # Split proportion train and test
 
 R <- 1 # Repetitions

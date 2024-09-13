@@ -39,8 +39,8 @@ main_function <- function(data = NULL, target = c("MPI","H","A"), nfolds = 5,
 
   predictions <- parallel::mclapply(methods, FUN = function(x) {
     switch(x,
-           "linear-pls" = {method.linearpls(Xtrain, ytrain, Xtest, nfolds)},
-           "elasticnet" = {method.elasticnet(Xtrain, ytrain, Xtest, nfolds)},
+           "linear-pls" = {method.linearpls(Xtrain, ytrain, Xtest, nfolds, betareg = TRUE, betatree = TRUE)},
+           "elasticnet" = {method.elasticnet(Xtrain, ytrain, Xtest, nfolds, betareg = TRUE, betatree = TRUE)},
            "xgboost" = {method.xgboost(Xtrain, ytrain, Xtest, nfolds)},
            "betaboost" = {method.betaboost(Xtrain, ytrain, Xtest, nfolds)})
   }, mc.cores = length(methods))

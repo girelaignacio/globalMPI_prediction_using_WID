@@ -26,8 +26,13 @@ data_preprocessing <- function(file){
   # Clean variables names with special characters
   df <- categoriavar(df)
   df <- dummiesregion(df)
+  # Prevent including MPI in the predictors
+  df <- df[,!grepl("multidimensional",colnames(df))]
   # Delete "_Other" suffix from variables
   colnames(df) <- gsub("_Other","", colnames(df))
+  # Divide H and A by 100
+  df$h <- df$h / 100
+  df$a<- df$a / 100
   return(df)
 }
 
