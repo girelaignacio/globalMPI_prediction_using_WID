@@ -20,9 +20,9 @@ library(globalMPI.prediction.using.WID)
 
 which_data <- 1 # Which data set will be used (see Table in Appendix A)
 if (which_data == 1){
-  data <- globalMPI.prediction.using.WID::dataframe1
+  data <- globalMPI.prediction.using.WID::dataset1
   } else if (which_data == 2){
-    data <- globalMPI.prediction.using.WID::dataframe2
+    data <- globalMPI.prediction.using.WID::dataset2
   } else if (which_data == 13){
     data <- globalMPI.prediction.using.WID::dataframe13
   }

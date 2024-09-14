@@ -112,6 +112,57 @@ kfoldCV.pls <- function(X, y, nfolds, max.d) {
 }
 
 
+# Beta-PLS ----------------------------------------------------------------
+
+kfoldCV.beta_pls <- function(X, y, nfolds, max.d) {
+
+  X <- as.matrix(X)
+  regions.cols <- which(grepl(pattern = "^df.region", colnames(X)))
+
+  K <- nfolds
+  D <- max.d
+  n <- nrow(X); p <- ncol(X) #number of observations and number of predictors
+  id <- sample(1:K, n, replace=TRUE, prob=rep(1/K,K))
+
+  results <- array(NA, dim=c(D,K))
+  for (d in 1:D){
+    for(i in 1:K){
+
+      ytrain <- y[id!=i]
+      Xtrain <- X[id!=i,-regions.cols]
+      Rtrain <- X[id!=i,regions.cols]
+
+      ytest <- y[id==i]
+      Xtest <- X[id==i,-regions.cols]
+      Rtest <- X[id==i,regions.cols]
+
+      W <- chemometrics::pls1_nipals(Xtrain, ytrain, a = d, scale = TRUE)$W
+
+      # Projection in train set
+      Pr_train <- as.matrix(Xtrain)%*%W
+      # Projection in test set
+      Pr_test <- as.matrix(Xtest)%*%W
+
+      # Fit beta PLs model
+      beta.data <- data.frame(cbind(ytrain,Pr_train,Rtrain))
+      beta.fit <- tryCatch(betareg::betareg(ytrain ~., data = beta.data,
+                                            na.action="na.exclude"),
+                           error= function(e) {return(NA)})
+      # Predictions in test
+      newdata <- data.frame(cbind(Pr_test,Rtest))
+      colnames(newdata) <- colnames(beta.data)[-1]
+      y_pred_test <- tryCatch(predict(beta.fit, newdata = newdata), error= function(e) {return(NA)}  )
+      MSE_test <- mean(c(ytest-y_pred_test)^2, na.rm = TRUE)
+
+      results[d, i] <- MSE_test
+    }
+  }
+  min.MSE <- which.min(apply(results, MARGIN = 1, FUN = mean))
+
+  return(list( d.min = min.MSE))
+}
+
+
 # xgboost -----------------------------------------------------------------
 
 kfoldCV.xgboost <- function(X, y, nfolds) {

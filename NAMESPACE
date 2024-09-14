@@ -3,4 +3,8 @@
 export(main_function)
 importFrom(dplyr,right_join)
 importFrom(magrittr,"%>%")
+importFrom(stats,coef)
+importFrom(stats,lm)
+importFrom(stats,model.matrix)
+importFrom(stats,predict)
 importFrom(tidyr,drop_na)
