@@ -2,7 +2,7 @@
 
 # Elasticnet --------------------------------------------------------------
 
-method.elasticnet <- function(data_train, y_train, data_test, nfolds){
+method.elasticnet <- function(data_train, y_train, data_test, nfolds, betareg = TRUE, betatree = TRUE){
   # Select hyperparameters
   hyperparam <- kfoldCV.elastic(data_train, y_train, nfolds)
   # Fit model
@@ -12,6 +12,39 @@ method.elasticnet <- function(data_train, y_train, data_test, nfolds){
   # Predict over test data
   ypred <- glmnet::predict.glmnet(elastic.fit, as.matrix(data_test))
   colnames(ypred) <- "elasticnet"
+
+  if(betareg){
+    # retrieve selected variables by elastic net
+    coeffs_elastic <- coef(elastic.fit, s = "lambda.min")
+    vars_elastic <-  coeffs_elastic@Dimnames[[1]][coeffs_elastic@i +1]
+    data_betareg <- data.frame(y_train, data_train[,colnames(data_train) %in% vars_elastic])
+    colnames(data_betareg)[1] <- "y"
+    datatest <- data_test[ , colnames(data_test) %in% vars_elastic]
+    # Fit beta regression model
+    beta_elastic.fit <- tryCatch(betareg::betareg(y ~ . , data = data_betareg), error= function(e) {return(NA)}  )
+    # Predict over test data
+    betareg_pred <- tryCatch(predict(beta_elastic.fit, newdata = datatest), error= function(e) {return(NA)}  )
+    betareg_pred <- as.data.frame(betareg_pred)
+    colnames(betareg_pred) <- "beta-elastic"
+    ypred <- cbind(ypred, betareg_pred)
+  }
+
+  if(betatree){
+    # retrieve selected variables by elastic net
+    coeffs_elastic <- coef(elastic.fit, s = "lambda.min")
+    vars_elastic <-  coeffs_elastic@Dimnames[[1]][coeffs_elastic@i +1]
+    data_betareg <- data.frame(y_train, data_train[,colnames(data_train) %in% vars_elastic])
+    colnames(data_betareg)[1] <- "y"
+    datatest <- data_test[ , colnames(data_test) %in% vars_elastic]
+    # Fit beta regression model
+    beta_tree_elastic.fit <- tryCatch(betareg::betatree(y ~ . , data = data_betareg), error= function(e) {return(NA)}  )
+    # Predict over test data
+    beta_tree_pred <- tryCatch(predict(beta_tree_elastic.fit, newdata = datatest), error= function(e) {return(NA)}  )
+    beta_tree_pred <- as.data.frame(beta_tree_pred)
+    colnames(beta_tree_pred) <- "beta-tree-elastic"
+    ypred <- cbind(ypred, beta_tree_pred)
+  }
+
   return(ypred)
 }
 
