@@ -3,6 +3,7 @@
 # Elasticnet --------------------------------------------------------------
 
 method.elasticnet <- function(data_train, y_train, data_test, nfolds, betareg = TRUE, betatree = TRUE){
+  y_train <- y_train + 1e-06 # ensure that is not equal to zero
   # Select hyperparameters
   hyperparam <- kfoldCV.elastic(data_train, y_train, nfolds)
   # Fit model
@@ -73,6 +74,7 @@ method.betaboost <- function(data_train, y_train, data_test, nfolds){
 # linear-pls --------------------------------------------------------------
 
 method.linearpls <- function(data_train, y_train, data_test, nfolds, pls.directions = 30){
+  y_train <- y_train + 1e-06 # ensure that is not equal to zero
   # Separate regions from data set
   regions.cols_train <- which(grepl(pattern = "^df.region", colnames(data_train)))
   regions.cols_test <- which(grepl(pattern = "^df.region", colnames(data_test)))
@@ -109,6 +111,7 @@ method.linearpls <- function(data_train, y_train, data_test, nfolds, pls.directi
 # Beta-PLS ----------------------------------------------------------------
 
 method.beta_pls <- function(data_train, y_train, data_test, nfolds, pls.directions = 30){
+  y_train <- y_train + 1e-06 # ensure that is not equal to zero
   # Separate regions from data set
   regions.cols_train <- which(grepl(pattern = "^df.region", colnames(data_train)))
   regions.cols_test <- which(grepl(pattern = "^df.region", colnames(data_test)))
@@ -145,6 +148,7 @@ method.beta_pls <- function(data_train, y_train, data_test, nfolds, pls.directio
 # Beta-Tree-PLS -----------------------------------------------------------
 
 method.beta_tree_pls <- function(data_train, y_train, data_test, nfolds, pls.directions = 30){
+  y_train <- y_train + 1e-06 # ensure that is not equal to zero
   # Separate regions from data set
   regions.cols_train <- which(grepl(pattern = "^df.region", colnames(data_train)))
   regions.cols_test <- which(grepl(pattern = "^df.region", colnames(data_test)))
@@ -183,6 +187,7 @@ method.beta_tree_pls <- function(data_train, y_train, data_test, nfolds, pls.dir
 # xgboost -----------------------------------------------------------------
 
 method.xgboost <- function(data_train, y_train, data_test, nfolds){
+  y_train <- y_train + 1e-06 # ensure that is not equal to zero
   # Select hyperparameters
   hyperparam <- kfoldCV.xgboost(data_train, y_train, nfolds)
 
