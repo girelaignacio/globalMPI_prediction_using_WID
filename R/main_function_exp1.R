@@ -1,16 +1,16 @@
-# Function used for experiment 1 and 2
+#' Function used for experiment 1
 #'
 #' @param data Which of the data frames in Annex is preferred to used
 #' @param target Target variable ("MPI","H","A")
 #' @param nfolds Number of folds used in K-Fold Cross-Validation for hyperparameter selection
-#' @param methods Which of the methods to be used ("elasticnet","betaboost")
+#' @param methods Which of the methods to be used ("linear-pls","beta-pls","beta-tree-pls","elasticnet","beta-elastic","beta-tree-elastic","betaboost","xgboost")
 #' @param split_size Proportion of the split of train and test data
 #' @param ... other arguments
 #'
 #' @return a data frame with the prediction of each method and its ground truth
 #' @export
 #'
-main_function <- function(data = NULL, target = c("MPI","H","A"), nfolds = 5,
+main_function_exp1 <- function(data = NULL, target = c("MPI","H","A"), nfolds = 5,
                           methods = c("linear-pls","beta-pls","beta-tree-pls",
                                       "elasticnet","beta-elastic","beta-tree-elastic",
                                       "betaboost","xgboost"), split_size = 0.8, ...){

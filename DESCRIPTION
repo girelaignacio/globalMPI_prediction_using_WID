@@ -13,12 +13,14 @@ Depends:
     R (>= 2.10)
 LazyData: true
 Imports: 
+    betaboost,
     betareg,
     chemometrics,
     dplyr,
     glmnet,
     magrittr,
     mboost,
+    partykit,
     reshape2,
     stats,
     tidyr,

@@ -54,7 +54,7 @@ foreach::getDoParWorkers()
 
 experiment_start <- Sys.time()
 results <- foreach(i = 1:R) %dopar% {
-  globalMPI.prediction.using.WID::main_function(data = data, target = target, nfolds = nfolds,
+  globalMPI.prediction.using.WID::main_function_exp1(data = data, target = target, nfolds = nfolds,
                 methods = methods, split_size = split_size)
 }
 experiment_end <- Sys.time()
