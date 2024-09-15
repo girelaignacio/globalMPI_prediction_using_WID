@@ -190,3 +190,54 @@ kfoldCV.xgboost <- function(X, y, nfolds) {
 
   return(list( xgb.model = optimal.rounds, xgb.params = XGBparams))
 }
+
+
+kfoldCV.beta_tree_pls <- function(X, y, nfolds, max.d) {
+
+  X <- as.matrix(X)
+  regions.cols <- which(grepl(pattern = "^df.region", colnames(X)))
+
+  K <- nfolds
+  D <- max.d
+  n <- nrow(X); p <- ncol(X) #number of observations and number of predictors
+  id <- sample(1:K, n, replace=TRUE, prob=rep(1/K,K))
+
+  results <- array(NA, dim=c(D,K))
+  for (d in 1:D){
+    for(i in 1:K){
+
+      ytrain <- y[id!=i]
+      Xtrain <- X[id!=i,-regions.cols]
+      Rtrain <- X[id!=i,regions.cols]
+
+      ytest <- y[id==i]
+      Xtest <- X[id==i,-regions.cols]
+      Rtest <- X[id==i,regions.cols]
+
+      W <- chemometrics::pls1_nipals(Xtrain, ytrain, a = d, scale = TRUE)$W
+
+      # Projection in train set
+      Pr_train <- as.matrix(Xtrain)%*%W
+      # Projection in test set
+      Pr_test <- as.matrix(Xtest)%*%W
+
+      # Fit beta PLS model
+      dummy <- ifelse(ytrain <= 0.2 , 1, 0)
+      beta.data <- data.frame(cbind(ytrain,Pr_train,Rtrain,dummy))
+      beta.fit <- tryCatch(betareg::betatree(ytrain ~., ~dummy ,data = beta.data,
+                                            na.action="na.exclude"),
+                           error= function(e) {return(NA)})
+      # Predictions in test
+      dummy <- ifelse(ytest <= 0.2 , 1, 0)
+      newdata <- data.frame(cbind(Pr_test,Rtest, dummy))
+      colnames(newdata) <- colnames(beta.data)[-1]
+      y_pred_test <- tryCatch(predict(beta.fit, newdata = newdata), error= function(e) {return(NA)}  )
+      MSE_test <- mean(c(ytest-y_pred_test)^2, na.rm = TRUE)
+
+      results[d, i] <- MSE_test
+    }
+  }
+  min.MSE <- which.min(apply(results, MARGIN = 1, FUN = mean))
+
+  return(list( d.min = min.MSE))
+}

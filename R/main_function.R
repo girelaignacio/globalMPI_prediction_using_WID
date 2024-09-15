@@ -11,7 +11,7 @@
 #' @export
 #'
 main_function <- function(data = NULL, target = c("MPI","H","A"), nfolds = 5,
-                          methods = c("linear-pls","beta-pls","elasticnet","betaboost","xgboost"), split_size = 0.8, ...){
+                          methods = c("linear-pls","beta-pls","beta-tree-pls","elasticnet","betaboost","xgboost"), split_size = 0.8, ...){
 
   # target to lower case ----------------------------------------------------
   target <- switch(target,
@@ -41,6 +41,7 @@ main_function <- function(data = NULL, target = c("MPI","H","A"), nfolds = 5,
     switch(x,
            "linear-pls" = {method.linearpls(Xtrain, ytrain, Xtest, nfolds)},
            "beta-pls" = {method.beta_pls(Xtrain, ytrain, Xtest, nfolds)},
+           "beta-tree-pls" = {method.beta_tree_pls(Xtrain, ytrain, Xtest, nfolds)},
            "elasticnet" = {method.elasticnet(Xtrain, ytrain, Xtest, nfolds, betareg = TRUE, betatree = TRUE)},
            "xgboost" = {method.xgboost(Xtrain, ytrain, Xtest, nfolds)},
            "betaboost" = {method.betaboost(Xtrain, ytrain, Xtest, nfolds)})

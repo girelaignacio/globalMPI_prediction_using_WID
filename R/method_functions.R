@@ -108,6 +108,45 @@ method.beta_pls <- function(data_train, y_train, data_test, nfolds, pls.directio
   return(ypred)
 }
 
+
+# Beta-Tree-PLS -----------------------------------------------------------
+
+method.beta_tree_pls <- function(data_train, y_train, data_test, nfolds, pls.directions = 30){
+  # Separate regions from data set
+  regions.cols_train <- which(grepl(pattern = "^df.region", colnames(data_train)))
+  regions.cols_test <- which(grepl(pattern = "^df.region", colnames(data_test)))
+  Rtrain <- data_train[,regions.cols_train]
+  Xtrain <- data_train[,-regions.cols_train]
+  Rtest <- data_test[,regions.cols_test]
+  Xtest <- data_test[,-regions.cols_test]
+  # Select hyperparameters
+  hyperparam <- kfoldCV.beta_tree_pls(data_train, y_train, nfolds, pls.directions)
+  if(length(hyperparam$d.min) == 0){hyperparam$d.min <- 1}
+  # Fit model
+  # Estimate projections
+  pls.projections <- chemometrics::pls1_nipals(Xtrain, y_train, a = hyperparam$d.min, scale = TRUE)
+  datatrain <- as.data.frame(cbind(y_train, as.matrix(Xtrain) %*% pls.projections$W))
+  colnames(datatrain)[1] <- "y"
+  #datatrain$dummy <-  ifelse(y_train <= 0.2 , 1, 0)
+  datatest <- data.frame(as.matrix(Xtest) %*% pls.projections$W)
+  #datatest$dummy <-  ifelse(ytest <= 0.2 , 1, 0)
+  colnames(datatest) <- colnames(datatrain)[-1]
+
+  # Train and test data with dimension reduction and dummies of time and region - formula of fit
+  datatrain <- data.frame(datatrain, Rtrain)
+  datatest <- data.frame(datatest, Rtest)
+
+  # Fit
+  beta_tree_pls.fit <- tryCatch(betareg::betatree(y ~ . ,~ dummy , datatrain), error= function(e) {return(NA)}  )
+
+  # Predict over test data
+  ypred <- tryCatch(predict(beta_tree_pls.fit, newdata = datatest), error= function(e) {return(NA)}  )
+  ypred <- as.data.frame(ypred)
+  colnames(ypred) <- "beta-tree-pls"
+  return(ypred)
+}
+
+
 # xgboost -----------------------------------------------------------------
 
 method.xgboost <- function(data_train, y_train, data_test, nfolds){
