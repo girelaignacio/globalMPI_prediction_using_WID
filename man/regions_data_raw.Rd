@@ -5,7 +5,7 @@
 \alias{regions_data_raw}
 \title{This is a raw dataframe that contains information about ISO codes and World Regions (it is used to add the World Regions as predictors)}
 \format{
-An object of class \code{data.frame} with 265 rows and 6 columns.
+An object of class \code{data.frame} with 265 rows and 4 columns.
 }
 \usage{
 regions_data_raw
