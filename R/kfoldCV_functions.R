@@ -29,12 +29,12 @@ kfoldCV.elastic <- function(Xtrain, ytrain, folds_idxs) {
 
 # Betaboost ---------------------------------------------------------------
 
-kfoldCV.betaboost <- function(data, nfolds) {
-  K <- nfolds
+kfoldCV.betaboost <- function(data, folds_idxs) {
+  K <- length(unique(folds_idxs))
   n <- nrow(data)
-  id <- sample(1:K, n, replace=TRUE, prob=rep(1/K,K))
+  id <- folds_idxs #sample(1:K, n, replace=TRUE, prob=rep(1/K,K))
   # Hyperparameters
-  hyper_max_depth <- c(3,5,7)
+  hyper_max_depth <- c(3,5)
 
   # empty array to save results
   results <- array(NA, dim=c(length(hyper_max_depth),K))
@@ -46,7 +46,7 @@ kfoldCV.betaboost <- function(data, nfolds) {
 
 
       betaboost.fit <- mboost::blackboost(y ~ ., data = data_train.i, family = betaboost::BetaReg(),
-                                          control = mboost::boost_control(mstop = 200),
+                                          control = mboost::boost_control(mstop = 100),
                                           tree_controls = partykit::ctree_control(maxdepth = hyperparam))
 
       ypred <- predict(betaboost.fit, newdata = data_test.i[,-1], type = "response")
@@ -167,10 +167,17 @@ kfoldCV.beta_pls <- function(X, y, folds_idxs, max.d) {
 
 # xgboost -----------------------------------------------------------------
 
-kfoldCV.xgboost <- function(X, y, nfolds) {
+kfoldCV.xgboost <- function(X, y, folds_idxs) {
 
   X <- as.matrix(X)
   Y <- as.matrix(y)
+  K <- length(unique(folds_idxs))
+
+  # Custom folds idxs
+  custom.folds <- vector("list", K)
+  for( k in unique(folds_idxs)){
+    custom.folds[[k]] <- which( folds_idxs == k )
+    }
 
   XGBparams <-  list(objective = "reg:squarederror",
                      max_depth = c(3,5,7),
@@ -185,7 +192,7 @@ kfoldCV.xgboost <- function(X, y, nfolds) {
 
   xgbcv <- xgboost::xgb.cv(data= X,
                            params = XGBparams, label = y,
-                           nfold=nfolds, nrounds = 100,
+                           folds = custom.folds, nrounds = 100,
                            verbose = F, nthread=2)
 
   optimal.rounds <- which.min(xgbcv$evaluation_log$test_rmse_mean)

@@ -70,8 +70,8 @@ main_function_exp1 <- function(data = NULL, target = c("MPI","H","A"), nfolds = 
            "beta-pls" = {method.beta_pls(Xtrain, ytrain, Xtest, folds_idxs)},
            "beta-tree-pls" = {method.beta_tree_pls(Xtrain, ytrain, Xtest, folds_idxs)},
            "elasticnet" = {method.elasticnet(Xtrain, ytrain, Xtest, folds_idxs, betareg = betareg_elastic, betatree = beta_tree_elastic)},
-           "xgboost" = {method.xgboost(Xtrain, ytrain, Xtest, nfolds)},
-           "betaboost" = {method.betaboost(Xtrain, ytrain, Xtest, nfolds)})
+           "xgboost" = {method.xgboost(Xtrain, ytrain, Xtest, folds_idxs)},
+           "betaboost" = {method.betaboost(Xtrain, ytrain, Xtest, folds_idxs)})
   }, mc.cores = length(methods))
 
   out <- do.call("cbind", predictions)

@@ -52,13 +52,13 @@ method.elasticnet <- function(data_train, y_train, data_test, folds_idxs, betare
 
 # Betaboost (tree-based) --------------------------------------------------
 
-method.betaboost <- function(data_train, y_train, data_test, nfolds){
+method.betaboost <- function(data_train, y_train, data_test, folds_idxs){
   # merge ytrain and predictors
   y_train <- y_train + 1e-06 # ensure that is not equal to zero
   data_betaboost <- data.frame(y_train, data_train)
   colnames(data_betaboost)[1] <- "y"
   # Select hyperparameters
-  hyperparam <- kfoldCV.betaboost(data_betaboost, nfolds)
+  hyperparam <- kfoldCV.betaboost(data_betaboost, folds_idxs)
   # Fit model
   betaboost.fit <- mboost::blackboost(y ~ ., data = data_betaboost, family = betaboost::BetaReg(),
                                       control = mboost::boost_control(mstop = 200),
@@ -186,10 +186,10 @@ method.beta_tree_pls <- function(data_train, y_train, data_test, folds_idxs, pls
 
 # xgboost -----------------------------------------------------------------
 
-method.xgboost <- function(data_train, y_train, data_test, nfolds){
+method.xgboost <- function(data_train, y_train, data_test, folds_idxs){
   y_train <- y_train + 1e-06 # ensure that is not equal to zero
   # Select hyperparameters
-  hyperparam <- kfoldCV.xgboost(data_train, y_train, nfolds)
+  hyperparam <- kfoldCV.xgboost(data_train, y_train, folds_idxs)
 
   # Fitted model
   xgb.fit <- xgboost::xgboost(params = hyperparam$xgb.params,
