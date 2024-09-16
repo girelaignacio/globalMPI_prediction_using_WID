@@ -3,7 +3,7 @@
 
 # Elasticnet --------------------------------------------------------------
 
-kfoldCV.elastic <- function(Xtrain, ytrain, nfolds) {
+kfoldCV.elastic <- function(Xtrain, ytrain, folds_idxs) {
 
   Xtrain <- as.matrix(Xtrain)
 
@@ -13,7 +13,7 @@ kfoldCV.elastic <- function(Xtrain, ytrain, nfolds) {
 
   for (i in 1:length(alpha))
   {
-    cvg <- glmnet::cv.glmnet(x = Xtrain, y=ytrain, nfolds = nfolds, family = "gaussian", alpha = alpha[i])
+    cvg <- glmnet::cv.glmnet(x = Xtrain, y=ytrain, foldid = folds_idxs, family = "gaussian", alpha = alpha[i])
     best$a <- c(best$a, alpha[i])
     best$mse <- c(best$mse, min(cvg$cvm))
   }
@@ -21,7 +21,7 @@ kfoldCV.elastic <- function(Xtrain, ytrain, nfolds) {
   index <- which(best$mse==min(best$mse))
   best.alpha <- best$a[index]
 
-  elastic_cv <- glmnet::cv.glmnet(x = Xtrain, y = ytrain, family = "gaussian", alpha = best.alpha)
+  elastic_cv <- glmnet::cv.glmnet(x = Xtrain, y = ytrain, foldid = folds_idxs, family = "gaussian", alpha = best.alpha)
 
 
   return(list(best.alpha =  best.alpha,  best.lambda = elastic_cv$lambda.min ))
@@ -65,15 +65,16 @@ kfoldCV.betaboost <- function(data, nfolds) {
 
 # linearpls ---------------------------------------------------------------
 
-kfoldCV.pls <- function(X, y, nfolds, max.d) {
+kfoldCV.pls <- function(X, y, folds_idxs, max.d) {
 
   X <- as.matrix(X)
   regions.cols <- which(grepl(pattern = "^df.region", colnames(X)))
 
-  K <- nfolds
+  K <- length(unique(folds_idxs))
   D <- max.d
   n <- nrow(X); p <- ncol(X) #number of observations and number of predictors
-  id <- sample(1:K, n, replace=TRUE, prob=rep(1/K,K))
+  #id <- sample(1:K, n, replace=TRUE, prob=rep(1/K,K))
+  id <- folds_idxs
 
   results <- array(NA, dim=c(D,K))
   for (d in 1:D){
@@ -114,15 +115,16 @@ kfoldCV.pls <- function(X, y, nfolds, max.d) {
 
 # Beta-PLS ----------------------------------------------------------------
 
-kfoldCV.beta_pls <- function(X, y, nfolds, max.d) {
+kfoldCV.beta_pls <- function(X, y, folds_idxs, max.d) {
 
   X <- as.matrix(X)
   regions.cols <- which(grepl(pattern = "^df.region", colnames(X)))
 
-  K <- nfolds
+  K <- length(unique(folds_idxs))
   D <- max.d
   n <- nrow(X); p <- ncol(X) #number of observations and number of predictors
-  id <- sample(1:K, n, replace=TRUE, prob=rep(1/K,K))
+  #id <- sample(1:K, n, replace=TRUE, prob=rep(1/K,K))
+  id <- folds_idxs
 
   results <- array(NA, dim=c(D,K))
   for (d in 1:D){
@@ -192,15 +194,17 @@ kfoldCV.xgboost <- function(X, y, nfolds) {
 }
 
 
-kfoldCV.beta_tree_pls <- function(X, y, nfolds, max.d) {
+# beta-tree-PLS -----------------------------------------------------------
+
+kfoldCV.beta_tree_pls <- function(X, y, folds_idxs, max.d) {
 
   X <- as.matrix(X)
   regions.cols <- which(grepl(pattern = "^df.region", colnames(X)))
 
-  K <- nfolds
+  K <- length(unique(folds_idxs))
   D <- max.d
   n <- nrow(X); p <- ncol(X) #number of observations and number of predictors
-  id <- sample(1:K, n, replace=TRUE, prob=rep(1/K,K))
+  id <- folds_idxs
 
   results <- array(NA, dim=c(D,K))
   for (d in 1:D){

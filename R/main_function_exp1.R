@@ -40,6 +40,10 @@ main_function_exp1 <- function(data = NULL, target = c("MPI","H","A"), nfolds = 
   rownames(Xtest) <- names(ytest) <- paste(split$data_test$country,split$data_test$year, sep = ".")
 
 
+  # K-fold indices ----------------------------------------------------------
+
+  folds_idxs <- as.numeric(Kfold_idxs(ytrain, nfolds))
+
   # check methods argument when betareg and betatree is used with elasticnet
   # selected coefficients
     # beta regression with elasticnet coeffs
@@ -62,10 +66,10 @@ main_function_exp1 <- function(data = NULL, target = c("MPI","H","A"), nfolds = 
   # RUN METHODS
   predictions <- parallel::mclapply(methods, FUN = function(x) {
     switch(x,
-           "linear-pls" = {method.linearpls(Xtrain, ytrain, Xtest, nfolds)},
-           "beta-pls" = {method.beta_pls(Xtrain, ytrain, Xtest, nfolds)},
-           "beta-tree-pls" = {method.beta_tree_pls(Xtrain, ytrain, Xtest, nfolds)},
-           "elasticnet" = {method.elasticnet(Xtrain, ytrain, Xtest, nfolds, betareg = betareg_elastic, betatree = beta_tree_elastic)},
+           "linear-pls" = {method.linearpls(Xtrain, ytrain, Xtest, folds_idxs)},
+           "beta-pls" = {method.beta_pls(Xtrain, ytrain, Xtest, folds_idxs)},
+           "beta-tree-pls" = {method.beta_tree_pls(Xtrain, ytrain, Xtest, folds_idxs)},
+           "elasticnet" = {method.elasticnet(Xtrain, ytrain, Xtest, folds_idxs, betareg = betareg_elastic, betatree = beta_tree_elastic)},
            "xgboost" = {method.xgboost(Xtrain, ytrain, Xtest, nfolds)},
            "betaboost" = {method.betaboost(Xtrain, ytrain, Xtest, nfolds)})
   }, mc.cores = length(methods))

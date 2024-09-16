@@ -2,10 +2,10 @@
 
 # Elasticnet --------------------------------------------------------------
 
-method.elasticnet <- function(data_train, y_train, data_test, nfolds, betareg = TRUE, betatree = TRUE){
+method.elasticnet <- function(data_train, y_train, data_test, folds_idxs, betareg = TRUE, betatree = TRUE){
   y_train <- y_train + 1e-06 # ensure that is not equal to zero
   # Select hyperparameters
-  hyperparam <- kfoldCV.elastic(data_train, y_train, nfolds)
+  hyperparam <- kfoldCV.elastic(data_train, y_train, folds_idxs)
   # Fit model
   elastic.fit <- glmnet::glmnet(x = data_train, y = y_train, family = "gaussian",
                                 alpha = hyperparam$best.alpha,
@@ -73,7 +73,7 @@ method.betaboost <- function(data_train, y_train, data_test, nfolds){
 
 # linear-pls --------------------------------------------------------------
 
-method.linearpls <- function(data_train, y_train, data_test, nfolds, pls.directions = 30){
+method.linearpls <- function(data_train, y_train, data_test, folds_idxs, pls.directions = 30){
   y_train <- y_train + 1e-06 # ensure that is not equal to zero
   # Separate regions from data set
   regions.cols_train <- which(grepl(pattern = "^df.region", colnames(data_train)))
@@ -83,7 +83,7 @@ method.linearpls <- function(data_train, y_train, data_test, nfolds, pls.directi
   Rtest <- data_test[,regions.cols_test]
   Xtest <- data_test[,-regions.cols_test]
   # Select hyperparameters
-  hyperparam <- kfoldCV.pls(data_train, y_train, nfolds, pls.directions)
+  hyperparam <- kfoldCV.pls(data_train, y_train, folds_idxs, pls.directions)
 
   # Fit model
     # Estimate projections
@@ -110,7 +110,7 @@ method.linearpls <- function(data_train, y_train, data_test, nfolds, pls.directi
 
 # Beta-PLS ----------------------------------------------------------------
 
-method.beta_pls <- function(data_train, y_train, data_test, nfolds, pls.directions = 30){
+method.beta_pls <- function(data_train, y_train, data_test, folds_idxs, pls.directions = 30){
   y_train <- y_train + 1e-06 # ensure that is not equal to zero
   # Separate regions from data set
   regions.cols_train <- which(grepl(pattern = "^df.region", colnames(data_train)))
@@ -120,7 +120,7 @@ method.beta_pls <- function(data_train, y_train, data_test, nfolds, pls.directio
   Rtest <- data_test[,regions.cols_test]
   Xtest <- data_test[,-regions.cols_test]
   # Select hyperparameters
-  hyperparam <- kfoldCV.beta_pls(data_train, y_train, nfolds, pls.directions)
+  hyperparam <- kfoldCV.beta_pls(data_train, y_train, folds_idxs, pls.directions)
 
   # Fit model
   # Estimate projections
@@ -147,7 +147,7 @@ method.beta_pls <- function(data_train, y_train, data_test, nfolds, pls.directio
 
 # Beta-Tree-PLS -----------------------------------------------------------
 
-method.beta_tree_pls <- function(data_train, y_train, data_test, nfolds, pls.directions = 30){
+method.beta_tree_pls <- function(data_train, y_train, data_test, folds_idxs, pls.directions = 30){
   y_train <- y_train + 1e-06 # ensure that is not equal to zero
   # Separate regions from data set
   regions.cols_train <- which(grepl(pattern = "^df.region", colnames(data_train)))
@@ -157,7 +157,7 @@ method.beta_tree_pls <- function(data_train, y_train, data_test, nfolds, pls.dir
   Rtest <- data_test[,regions.cols_test]
   Xtest <- data_test[,-regions.cols_test]
   # Select hyperparameters
-  hyperparam <- kfoldCV.beta_tree_pls(data_train, y_train, nfolds, pls.directions)
+  hyperparam <- kfoldCV.beta_tree_pls(data_train, y_train, folds_idxs, pls.directions)
   if(length(hyperparam$d.min) == 0){hyperparam$d.min <- 1}
   # Fit model
   # Estimate projections

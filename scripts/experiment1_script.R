@@ -31,7 +31,7 @@ if (which_data == 1){
 
 target <- "MPI"    # Target variable
 nfolds <- 5        # Number of folds
-#methods <- c("elasticnet","betaboost") # Method to be used in estimation
+# by default all methods are used.
 split_size <- 0.8 # Split proportion train and test
 
 R <- 1 # Repetitions
