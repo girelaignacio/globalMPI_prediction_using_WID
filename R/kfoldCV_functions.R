@@ -153,13 +153,13 @@ kfoldCV.beta_pls <- function(X, y, folds_idxs, max.d) {
       # Predictions in test
       newdata <- data.frame(cbind(Pr_test,Rtest))
       colnames(newdata) <- colnames(beta.data)[-1]
-      y_pred_test <- tryCatch(predict(beta.fit, newdata = newdata), error= function(e) {return(NA)}  )
+      y_pred_test <- tryCatch(predict(beta.fit, newdata = newdata), error= function(e) {return(rep(NA,nrow(newdata)))}  )
       MSE_test <- mean(c(ytest-y_pred_test)^2, na.rm = TRUE)
 
       results[d, i] <- MSE_test
     }
   }
-  min.MSE <- which.min(apply(results, MARGIN = 1, FUN = mean))
+  min.MSE <- which.min(apply(results, MARGIN = 1, FUN = mean, na.rm = TRUE))
 
   return(list( d.min = min.MSE))
 }
@@ -242,13 +242,13 @@ kfoldCV.beta_tree_pls <- function(X, y, folds_idxs, max.d) {
       dummy <- ifelse(ytest <= 0.2 , 1, 0)
       newdata <- data.frame(cbind(Pr_test,Rtest, dummy))
       colnames(newdata) <- colnames(beta.data)[-1]
-      y_pred_test <- tryCatch(predict(beta.fit, newdata = newdata), error= function(e) {return(NA)}  )
+      y_pred_test <- tryCatch(predict(beta.fit, newdata = newdata), error= function(e) {return(rep(NA,nrow(newdata)))}  )
       MSE_test <- mean(c(ytest-y_pred_test)^2, na.rm = TRUE)
 
       results[d, i] <- MSE_test
     }
   }
-  min.MSE <- which.min(apply(results, MARGIN = 1, FUN = mean))
+  min.MSE <- which.min(apply(results, MARGIN = 1, FUN = mean, na.rm = TRUE))
 
   return(list( d.min = min.MSE))
 }

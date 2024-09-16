@@ -24,7 +24,7 @@ method.elasticnet <- function(data_train, y_train, data_test, folds_idxs, betare
     # Fit beta regression model
     beta_elastic.fit <- tryCatch(betareg::betareg(y ~ . , data = data_betareg), error= function(e) {return(NA)}  )
     # Predict over test data
-    betareg_pred <- tryCatch(predict(beta_elastic.fit, newdata = datatest), error= function(e) {return(NA)}  )
+    betareg_pred <- tryCatch(predict(beta_elastic.fit, newdata = datatest), error= function(e) {return(rep(NA,nrow(datatest)))}  )
     betareg_pred <- as.data.frame(betareg_pred)
     colnames(betareg_pred) <- "beta-elastic"
     ypred <- cbind(ypred, betareg_pred)
@@ -40,7 +40,7 @@ method.elasticnet <- function(data_train, y_train, data_test, folds_idxs, betare
     # Fit beta regression model
     beta_tree_elastic.fit <- tryCatch(betareg::betatree(y ~ . , data = data_betareg), error= function(e) {return(NA)}  )
     # Predict over test data
-    beta_tree_pred <- tryCatch(predict(beta_tree_elastic.fit, newdata = datatest), error= function(e) {return(NA)}  )
+    beta_tree_pred <- tryCatch(predict(beta_tree_elastic.fit, newdata = datatest), error= function(e) {return(rep(NA,nrow(datatest)))}  )
     beta_tree_pred <- as.data.frame(beta_tree_pred)
     colnames(beta_tree_pred) <- "beta-tree-elastic"
     ypred <- cbind(ypred, beta_tree_pred)
@@ -138,7 +138,7 @@ method.beta_pls <- function(data_train, y_train, data_test, folds_idxs, pls.dire
   beta_pls.fit <- tryCatch(betareg::betareg(y ~ . , datatrain), error= function(e) {return(NA)}  )
 
   # Predict over test data
-  ypred <- tryCatch(predict(beta_pls.fit, newdata = datatest), error= function(e) {return(NA)}  )
+  ypred <- tryCatch(predict(beta_pls.fit, newdata = datatest), error= function(e) {return(rep(NA,nrow(datatest)))}  )
   ypred <- as.data.frame(ypred)
   colnames(ypred) <- "beta-pls"
   return(ypred)
@@ -177,7 +177,7 @@ method.beta_tree_pls <- function(data_train, y_train, data_test, folds_idxs, pls
   beta_tree_pls.fit <- tryCatch(betareg::betatree(y ~ . ,~ dummy , datatrain), error= function(e) {return(NA)}  )
 
   # Predict over test data
-  ypred <- tryCatch(predict(beta_tree_pls.fit, newdata = datatest), error= function(e) {return(NA)}  )
+  ypred <- tryCatch(predict(beta_tree_pls.fit, newdata = datatest), error= function(e) {return(rep(NA,nrow(datatest)))}  )
   ypred <- as.data.frame(ypred)
   colnames(ypred) <- "beta-tree-pls"
   return(ypred)
@@ -197,7 +197,7 @@ method.xgboost <- function(data_train, y_train, data_test, folds_idxs){
                               label = y_train,
                               nrounds = hyperparam$xgb.model, verbose = F, nthread = 5)
   # Predict  over test data
-  ypred <- as.matrix(predict(xgb.fit, as.matrix(data_test)))
+  ypred <- as.data.frame(predict(xgb.fit, as.matrix(data_test)))
 
   colnames(ypred) <- "xgboost"
   return(ypred)

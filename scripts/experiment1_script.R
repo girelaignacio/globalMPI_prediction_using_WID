@@ -9,7 +9,7 @@
 
 # Install the last version ------------------------------------------------
 
-devtools::install_github("https://github.com/girelaignacio/globalMPI_prediction_using_WID")
+#devtools::install_github("https://github.com/girelaignacio/globalMPI_prediction_using_WID")
 
 
 # Load package ------------------------------------------------------------
@@ -34,7 +34,7 @@ nfolds <- 5        # Number of folds
 # by default all methods are used.
 split_size <- 0.8 # Split proportion train and test
 
-R <- 1 # Repetitions
+R <- 2 # Repetitions
 
 # Run paralleled code ---------------------------------------------------
 
@@ -54,8 +54,8 @@ foreach::getDoParWorkers()
 
 experiment_start <- Sys.time()
 results <- foreach(i = 1:R) %dopar% {
-  globalMPI.prediction.using.WID::main_function_exp1(data = data, target = target, nfolds = nfolds,
-                methods = methods, split_size = split_size)
+  globalMPI.prediction.using.WID::main_function_exp1(data = data, target = target,
+                                                     nfolds = nfolds, split_size = split_size)
 }
 experiment_end <- Sys.time()
 experiment_time <- difftime(experiment_end, experiment_start, units = "mins")
@@ -67,7 +67,7 @@ parallel::stopCluster(cl = cl)
 # Save results ------------------------------------------------------------
 
 filename <- paste(getwd(),"/results/EXPERIMENT1_reps",
-                  paste(R,target,paste("df",which_data, sep = ""), sep="_"),
+                  paste(R,target,paste("dataset",which_data, sep = ""), sep="_"),
                   sep = "")
 saveRDS(results,file = filename)
 
