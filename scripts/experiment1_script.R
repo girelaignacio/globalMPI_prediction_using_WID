@@ -9,7 +9,7 @@
 
 # Install the last version ------------------------------------------------
 
-#devtools::install_github("https://github.com/girelaignacio/globalMPI_prediction_using_WID")
+devtools::install_github("https://github.com/girelaignacio/globalMPI_prediction_using_WID")
 
 
 # Load package ------------------------------------------------------------
@@ -31,10 +31,12 @@ if (which_data == 1){
 
 target <- "MPI"    # Target variable
 nfolds <- 5        # Number of folds
-# by default all methods are used.
+methods <- c("linear-pls","beta-pls","beta-tree-pls",
+             "elasticnet","beta-elastic","beta-tree-elastic",
+             "betaboost","xgboost")# by default all methods are used.
 split_size <- 0.8 # Split proportion train and test
 
-R <- 2 # Repetitions
+R <- 100 # Repetitions
 
 # Run paralleled code ---------------------------------------------------
 
@@ -54,7 +56,7 @@ foreach::getDoParWorkers()
 
 experiment_start <- Sys.time()
 results <- foreach(i = 1:R) %dopar% {
-  globalMPI.prediction.using.WID::main_function_exp1(data = data, target = target,
+  globalMPI.prediction.using.WID::main_function_exp1(data = data, target = target, methods = methods,
                                                      nfolds = nfolds, split_size = split_size)
 }
 experiment_end <- Sys.time()
@@ -62,7 +64,6 @@ experiment_time <- difftime(experiment_end, experiment_start, units = "mins")
 experiment_time
 
 parallel::stopCluster(cl = cl)
-
 
 # Save results ------------------------------------------------------------
 
