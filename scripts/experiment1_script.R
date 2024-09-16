@@ -55,7 +55,10 @@ foreach::getDoParRegistered()
 foreach::getDoParWorkers()
 
 experiment_start <- Sys.time()
-results <- foreach(i = 1:R) %dopar% {
+results <- foreach(
+    i = 1:R,
+    .errorhandling="remove"
+  ) %dopar% {
   globalMPI.prediction.using.WID::main_function_exp1(data = data, target = target, methods = methods,
                                                      nfolds = nfolds, split_size = split_size)
 }
@@ -68,7 +71,7 @@ parallel::stopCluster(cl = cl)
 # Save results ------------------------------------------------------------
 
 filename <- paste(getwd(),"/results/EXPERIMENT1_reps",
-                  paste(R,target,paste("dataset",which_data, sep = ""), sep="_"),
+                  paste(length(results),target,paste("dataset",which_data, sep = ""), sep="_"),
                   sep = "")
 saveRDS(results,file = filename)
 
