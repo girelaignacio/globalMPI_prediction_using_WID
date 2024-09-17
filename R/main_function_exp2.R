@@ -1,19 +1,19 @@
-#' Function used for experiment 1
+#' Function used for experiment 2
 #'
 #' @param data Which of the datasets in Appendix A is preferred to used
+#' @param testIndexes Test indexes
 #' @param target Target variable ("MPI","H","A")
 #' @param nfolds Number of folds used in K-Fold Cross-Validation for hyperparameter selection
 #' @param methods Which of the methods to be used ("linear-pls","beta-pls","beta-tree-pls","elasticnet","beta-elastic","beta-tree-elastic","betaboost","xgboost")
-#' @param split_size Proportion of the split of train and test data
 #' @param ... other arguments
 #'
 #' @return a data frame with the prediction of each method and its ground truth
 #' @export
 #'
-main_function_exp1 <- function(data = NULL, target = c("MPI","H","A"), nfolds = 5,
-                          methods = c("linear-pls","beta-pls","beta-tree-pls",
-                                      "elasticnet","beta-elastic","beta-tree-elastic",
-                                      "betaboost","xgboost"), split_size = 0.8, ...){
+main_function_exp2 <- function(data = NULL, testIndexes = NULL,  target = c("MPI","H","A"), nfolds = 5,
+                               methods = c("linear-pls","beta-pls","beta-tree-pls",
+                                           "elasticnet","beta-elastic","beta-tree-elastic",
+                                           "betaboost","xgboost"), ...){
 
   # target to lower case ----------------------------------------------------
   target <- switch(target,
@@ -27,17 +27,18 @@ main_function_exp1 <- function(data = NULL, target = c("MPI","H","A"), nfolds = 
   data$year_trend <- as.numeric(data$year)
   data$year_trend <- data$year_trend - min(data$year_trend)
 
-  # Split data in train and test
-    # Train
-  split <- random.split(data, split_size)
-  ytrain <- split$data_train[, target]
-  Xtrain <- split$data_train[,-which(colnames(split$data_train) %in% c("iso","region","country","year","mpi","h","a"))]
-  rownames(Xtrain) <- names(ytrain) <- paste(split$data_train$country,split$data_train$year, sep = ".")
+  # Split data in train and test using testIndexes argument
+  # Train
+  data_train <- data[-testIndexes,]
+  ytrain <- data_train[, target]
+  Xtrain <- data_train[,-which(colnames(data_train) %in% c("iso","region","country","year","mpi","h","a"))]
+  rownames(Xtrain) <- names(ytrain) <- paste(data_train$country,data_train$year, sep = ".")
 
-    # Test
-  ytest <- split$data_test[, target]
-  Xtest <- split$data_test[,-which(colnames(split$data_train) %in% c("iso","region","country","year","mpi","h","a"))]
-  rownames(Xtest) <- names(ytest) <- paste(split$data_test$country,split$data_test$year, sep = ".")
+  # Test
+  data_test <- data[testIndexes,]
+  ytest <- data_test[, target]
+  Xtest <- data_test[,-which(colnames(data_train) %in% c("iso","region","country","year","mpi","h","a"))]
+  rownames(Xtest) <- names(ytest) <- paste(data_test$country,data_test$year, sep = ".")
 
 
   # K-fold indices ----------------------------------------------------------
@@ -46,7 +47,7 @@ main_function_exp1 <- function(data = NULL, target = c("MPI","H","A"), nfolds = 
 
   # check methods argument when betareg and betatree is used with elasticnet
   # selected coefficients
-    # beta regression with elasticnet coeffs
+  # beta regression with elasticnet coeffs
   if("beta-elastic" %in% methods){
     betareg_elastic = TRUE
     methods <- methods[methods != "beta-elastic"]
@@ -54,7 +55,7 @@ main_function_exp1 <- function(data = NULL, target = c("MPI","H","A"), nfolds = 
       methods <- c(methods, "elasticnet")
     }
   }else{betareg_elastic = FALSE}
-    # beta tree regression with elasticnet coeffs
+  # beta tree regression with elasticnet coeffs
   if("beta-tree-elastic" %in% methods){
     beta_tree_elastic = TRUE
     methods <- methods[methods != "beta-tree-elastic"]
@@ -64,7 +65,7 @@ main_function_exp1 <- function(data = NULL, target = c("MPI","H","A"), nfolds = 
   }else{beta_tree_elastic = FALSE}
 
   # RUN METHODS
-  predictions <- parallel::mclapply(methods, FUN = function(x) {
+  predictions <- lapply(methods, FUN = function(x) {
     switch(x,
            "linear-pls" = {method.linearpls(Xtrain, ytrain, Xtest, folds_idxs)},
            "beta-pls" = {method.beta_pls(Xtrain, ytrain, Xtest, folds_idxs)},
@@ -72,7 +73,7 @@ main_function_exp1 <- function(data = NULL, target = c("MPI","H","A"), nfolds = 
            "elasticnet" = {method.elasticnet(Xtrain, ytrain, Xtest, folds_idxs, betareg = betareg_elastic, betatree = beta_tree_elastic)},
            "xgboost" = {method.xgboost(Xtrain, ytrain, Xtest, folds_idxs)},
            "betaboost" = {method.betaboost(Xtrain, ytrain, Xtest, folds_idxs)})
-  }, mc.cores = length(methods))
+  })
 
   out <- do.call("cbind", predictions)
   ground.truth <- ytest
