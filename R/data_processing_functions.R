@@ -6,6 +6,12 @@ data_processing <- function(df, num){
 
   withNAs <- selectrawdfs(df, num)
 
+  # define remove NAs functions
+  removeNAs <- function(df){
+    datafr <- df[ , apply(df, 2, function(x) !any(is.na(x)))]
+    return(datafr)
+  }
+
   datafr <- removeNAs(withNAs)
 
   return(datafr)
@@ -36,16 +42,27 @@ selectrawdfs <- function(df, num){
   return(datafr)
 }
 
-removeNAs <- function(df){
-  datafr <- df[ , apply(df, 2, function(x) !any(is.na(x)))]
-
-  return(datafr)
-}
 
 ###### selectrawdfs() dependencies
 
 data3 <- function(df){
   data <- df[(duplicated(df$country)|duplicated(df$country, fromLast=TRUE)),]
+
+  datasacandopaises = function(df, paises, paisadc = NULL){
+    if (is.null(paisadc) == FALSE){
+      paises = c(paises, paisadc)
+    }
+    nuevadata = df[!(df$country %in% paises),]
+    return(nuevadata)
+  }
+
+  paisesasacar <- function(df, cantdeNAs){
+    respais <- resumenporpais(df)
+    datapaises <- respais[respais[,6] >= cantdeNAs,]
+    paises <- c( paste(datapaises[,4]))
+    return(paises)
+  }
+
   datafr <- datasacandopaises(data, paisesasacar(data, 2000))
   return(datafr)
 }
@@ -98,24 +115,6 @@ generate.datasets <- function(df,times){
   }
   return(datos)
 }
-
-######### data3() dependencies
-
-datasacandopaises = function(df, paises, paisadc = NULL){
-  if (is.null(paisadc) == FALSE){
-    paises = c(paises, paisadc)
-  }
-  nuevadata = df[!(df$country %in% paises),]
-  return(nuevadata)
-}
-
-paisesasacar <- function(df, cantdeNAs){
-  respais <- resumenporpais(df)
-  datapaises <- respais[respais[,6] >= cantdeNAs,]
-  paises <- c( paste(datapaises[,4]))
-  return(paises)
-}
-
 
 ######### generate.datasets() dependencies
 
