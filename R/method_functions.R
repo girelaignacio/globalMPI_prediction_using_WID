@@ -87,7 +87,9 @@ method.linearpls <- function(data_train, y_train, data_test, folds_idxs, pls.dir
 
   # Fit model
     # Estimate projections
-  pls.projections <- chemometrics::pls1_nipals(Xtrain, y_train, a = hyperparam$d.min, scale = TRUE)
+  a.min <- hyperparam$d.min
+  if(is.null(a.min)){d.min <- 1}
+  pls.projections <- chemometrics::pls1_nipals(Xtrain, y_train, a = a.min, scale = TRUE)
   datatrain <- as.data.frame(cbind(y_train, as.matrix(Xtrain) %*% pls.projections$W))
   colnames(datatrain)[1] <- "y"
   datatest <- data.frame(as.matrix(Xtest) %*% pls.projections$W)
@@ -124,7 +126,9 @@ method.beta_pls <- function(data_train, y_train, data_test, folds_idxs, pls.dire
 
   # Fit model
   # Estimate projections
-  pls.projections <- chemometrics::pls1_nipals(Xtrain, y_train, a = hyperparam$d.min, scale = TRUE)
+  a.min <- hyperparam$d.min
+  if(is.null(a.min)){d.min <- 1}
+  pls.projections <- chemometrics::pls1_nipals(Xtrain, y_train, a = a.min, scale = TRUE)
   datatrain <- as.data.frame(cbind(y_train, as.matrix(Xtrain) %*% pls.projections$W))
   colnames(datatrain)[1] <- "y"
   datatest <- data.frame(as.matrix(Xtest) %*% pls.projections$W)
@@ -158,10 +162,11 @@ method.beta_tree_pls <- function(data_train, y_train, data_test, folds_idxs, pls
   Xtest <- data_test[,-regions.cols_test]
   # Select hyperparameters
   hyperparam <- kfoldCV.beta_tree_pls(data_train, y_train, folds_idxs, pls.directions)
-  if(length(hyperparam$d.min) == 0){hyperparam$d.min <- 1}
   # Fit model
   # Estimate projections
-  pls.projections <- chemometrics::pls1_nipals(Xtrain, y_train, a = hyperparam$d.min, scale = TRUE)
+  a.min <- hyperparam$d.min
+  if(is.null(a.min)){d.min <- 1}
+  pls.projections <- chemometrics::pls1_nipals(Xtrain, y_train, a = a.min, scale = TRUE)
   datatrain <- as.data.frame(cbind(y_train, as.matrix(Xtrain) %*% pls.projections$W))
   colnames(datatrain)[1] <- "y"
   #datatrain$dummy <-  ifelse(y_train <= 0.2 , 1, 0)
