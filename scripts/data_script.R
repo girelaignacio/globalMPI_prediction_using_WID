@@ -16,9 +16,9 @@ data <- data_preprocessing(webscrapped_data)
 
 # This is an example for data set 1 (see Table in Appendix A)
 # How the rest of the data set are called and saved is straightforward
-which_df <- 1
+which_df <- 13
 df <- data_processing(data, which_df)
 
 # save it
 assign(paste("dataset",which_df, sep = ""), df)
-usethis::use_data(dataset1)
+usethis::use_data(dataset13)

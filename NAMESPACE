@@ -2,9 +2,13 @@
 
 export(main_function_exp1)
 export(main_function_exp2)
+importFrom(dplyr,anti_join)
+importFrom(dplyr,arrange)
 importFrom(dplyr,right_join)
 importFrom(magrittr,"%>%")
+importFrom(stats,aggregate)
 importFrom(stats,coef)
+importFrom(stats,complete.cases)
 importFrom(stats,lm)
 importFrom(stats,model.matrix)
 importFrom(stats,predict)
