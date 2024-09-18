@@ -13,6 +13,15 @@ random.split <- function(df, train_size){
 
 # kfold_indices -----------------------------------------------------------
 
+#' Create K-fold indices for Cross Validation
+#'
+#' @param y vector of observations
+#' @param k number of folds
+#' @param ...
+#'
+#' @return a vector with length(y) with the corresping fold each observations belongs
+#' @export
+#'
 Kfold_idxs <- function(y, k, ...){
   # number of observations
   n <- length(y)
