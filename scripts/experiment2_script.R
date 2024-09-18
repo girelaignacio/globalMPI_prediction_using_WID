@@ -17,7 +17,7 @@ devtools::load_all()
 
 # Load data ---------------------------------------------------------------
 
-which_data <- 1 # Which data set will be used (see Table in Appendix A)
+which_data <- 2 # Which data set will be used (see Table in Appendix A)
 if (which_data == 1){
   data <- globalMPI.prediction.using.WID::dataset1
 } else if (which_data == 2){
