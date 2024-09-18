@@ -9,7 +9,7 @@
 
 # Install the last version ------------------------------------------------
 
-devtools::install_github("https://github.com/girelaignacio/globalMPI_prediction_using_WID")
+#devtools::install_github("https://github.com/girelaignacio/globalMPI_prediction_using_WID")
 
 
 # Load package ------------------------------------------------------------
@@ -18,18 +18,18 @@ library(globalMPI.prediction.using.WID)
 
 # Load data ---------------------------------------------------------------
 
-which_data <- 1 # Which data set will be used (see Table in Appendix A)
+which_data <- 13 # Which data set will be used (see Table in Appendix A)
 if (which_data == 1){
   data <- globalMPI.prediction.using.WID::dataset1
   } else if (which_data == 2){
     data <- globalMPI.prediction.using.WID::dataset2
   } else if (which_data == 13){
-    data <- globalMPI.prediction.using.WID::dataframe13
+    data <- globalMPI.prediction.using.WID::dataset13
   }
 
 # Set parameters ----------------------------------------------------------
 
-target <- "MPI"    # Target variable
+target <- "H"    # Target variable
 nfolds <- 5        # Number of folds
 methods <- c("linear-pls","beta-pls","beta-tree-pls",
              "elasticnet","beta-elastic","beta-tree-elastic",

@@ -7,13 +7,13 @@
 # and target variable.
 
 # Install the last version ------------------------------------------------
-
-devtools::install_github("https://github.com/girelaignacio/globalMPI_prediction_using_WID")
+devtools::load_all()
+#devtools::install_github("https://github.com/girelaignacio/globalMPI_prediction_using_WID")
 
 
 # Load package ------------------------------------------------------------
 
-library(globalMPI.prediction.using.WID)
+#<  library(globalMPI.prediction.using.WID)
 
 # Load data ---------------------------------------------------------------
 
@@ -23,26 +23,16 @@ if (which_data == 1){
 } else if (which_data == 2){
   data <- globalMPI.prediction.using.WID::dataset2
 } else if (which_data == 13){
-  data <- globalMPI.prediction.using.WID::dataframe13
+  data <- globalMPI.prediction.using.WID::dataset13
 }
 
 # Set parameters ----------------------------------------------------------
 
-target <- "MPI"    # Target variable
+target <- "A"    # Target variable
 nfolds <- 5        # Number of folds
-methods <- c("xgboost")# by default all methods are used.
-
-
-# Run 10-Fold CV ----------------------------------------------------------
-
-# Define folds indices
-folds_index <- Kfold_idxs(data[,1], 10)
-results <- lapply(1:10, function(x){
-  print(x)
-  testIdxs <- which(folds_index == x,arr.ind=TRUE)
-  return(suppressWarnings(main_function_exp2(data = data, testIndexes = testIdxs,
-                     target = target, methods = methods, nfolds = nfolds)))
-})
+methods <- c("linear-pls","beta-pls","beta-tree-pls",
+             "elasticnet","beta-elastic","beta-tree-elastic",
+             "betaboost","xgboost")# by default all methods are used.
 
 # Run paralleled code ---------------------------------------------------
 
@@ -61,14 +51,24 @@ foreach::getDoParRegistered()
 foreach::getDoParWorkers()
 
 experiment_start <- Sys.time()
-results <- foreach(
-  i = 1:10,
-) %do% {
-  testIdxs <- which(folds_index == i,arr.ind=TRUE)
-  main_function_exp2(data = data, testIndexes = testIdxs,
-      target = target, methods = methods,
-      nfolds = nfolds)
+
+run <- TRUE
+while (run) {
+  # Define folds indices
+  folds_index <- Kfold_idxs(data[,1], 10)
+  # run paralleled code
+  results <- mclapply(1:10, function(x){
+    cat(as.character(x),"-th fold\n")
+    testIdxs <- which(folds_index == x,arr.ind=TRUE)
+    return(suppressWarnings(main_function_exp2(data = data, testIndexes = testIdxs,
+                                               target = target, methods = methods, nfolds = nfolds)))
+  }, mc.cores = cores)
+  # check if any error in one method partition
+  if(!any(sapply(results, function(x){is.null(dim(x))}))){run <- FALSE}
 }
+
+
+
 experiment_end <- Sys.time()
 experiment_time <- difftime(experiment_end, experiment_start, units = "mins")
 experiment_time
