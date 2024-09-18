@@ -57,4 +57,12 @@
 #' @keywords  World Indicators Database
 "dataset2"
 
+#' This is the processed data set 13 used in the paper (See Table in Appendix)
+#'
+#' @name dataset13
+#' @docType data
+#' @author World Bank
+#' @keywords  World Indicators Database
+"dataset13"
+
 
