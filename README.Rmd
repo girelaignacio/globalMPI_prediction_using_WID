@@ -76,3 +76,9 @@ devtools::install_github("girelaignacio/globalMPI_prediction_using_WID")
     -   figures/
 
         *Contains code and figures used in the paper*
+
+    #### Contact
+
+    If you have any question about the code functionality, please open
+    an issue in this repository or contact Ignacio Girela (📧
+    ignacio.girela\@unc.edu.ar)
