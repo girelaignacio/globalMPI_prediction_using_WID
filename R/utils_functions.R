@@ -19,7 +19,7 @@ random.split <- function(df, train_size){
 #' @param k number of folds
 #' @param ...
 #'
-#' @return a vector with length(y) with the corresping fold each observations belongs
+#' @return a vector with length(y) with the corresponding fold each observations belongs
 #' @export
 #'
 Kfold_idxs <- function(y, k, ...){
