@@ -150,7 +150,7 @@ kfoldCV.beta_pls <- function(X, y, folds_idxs, max.d) {
       # beta.fit <- tryCatch(betareg::betareg(ytrain ~., data = beta.data,
       #                                       na.action="na.exclude"),
       #                      error= function(e) {return(NA)})
-      beta.fit <- betareg::betareg(ytrain ~., data = beta.data,link.phi = "log", link = "logit")
+      beta.fit <- tryCatch(betareg::betareg(ytrain ~., data = beta.data,link.phi = "log", link = "logit"), error= function(e) {return(NA)}  )
 
       # Predictions in test
       newdata <- data.frame(cbind(Pr_test,Rtest))
