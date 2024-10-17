@@ -88,7 +88,7 @@ kfoldCV.pls <- function(X, y, folds_idxs, max.d) {
       Xtest <- X[id==i,-regions.cols]
       Rtest <- X[id==i,regions.cols]
 
-      W <- chemometrics::pls1_nipals(Xtrain, ytrain, a = d, scale = TRUE)$W
+      W <- chemometrics::pls1_nipals(Xtrain, ytrain, a = d, scale = FALSE)$W
 
       # Projection in train set
       Pr_train <- as.matrix(Xtrain)%*%W
@@ -138,7 +138,7 @@ kfoldCV.beta_pls <- function(X, y, folds_idxs, max.d) {
       Xtest <- X[id==i,-regions.cols]
       Rtest <- X[id==i,regions.cols]
 
-      W <- chemometrics::pls1_nipals(Xtrain, ytrain, a = d, scale = TRUE)$W
+      W <- chemometrics::pls1_nipals(Xtrain, ytrain, a = d, scale = FALSE)$W
 
       # Projection in train set
       Pr_train <- as.matrix(Xtrain)%*%W
@@ -147,9 +147,11 @@ kfoldCV.beta_pls <- function(X, y, folds_idxs, max.d) {
 
       # Fit beta PLs model
       beta.data <- data.frame(cbind(ytrain,Pr_train,Rtrain))
-      beta.fit <- tryCatch(betareg::betareg(ytrain ~., data = beta.data,
-                                            na.action="na.exclude"),
-                           error= function(e) {return(NA)})
+      # beta.fit <- tryCatch(betareg::betareg(ytrain ~., data = beta.data,
+      #                                       na.action="na.exclude"),
+      #                      error= function(e) {return(NA)})
+      beta.fit <- betareg::betareg(ytrain ~., data = beta.data,link.phi = "log", link = "logit")
+
       # Predictions in test
       newdata <- data.frame(cbind(Pr_test,Rtest))
       colnames(newdata) <- colnames(beta.data)[-1]
@@ -225,7 +227,7 @@ kfoldCV.beta_tree_pls <- function(X, y, folds_idxs, max.d) {
       Xtest <- X[id==i,-regions.cols]
       Rtest <- X[id==i,regions.cols]
 
-      W <- chemometrics::pls1_nipals(Xtrain, ytrain, a = d, scale = TRUE)$W
+      W <- chemometrics::pls1_nipals(Xtrain, ytrain, a = d, scale = FALSE)$W
 
       # Projection in train set
       Pr_train <- as.matrix(Xtrain)%*%W
@@ -235,9 +237,10 @@ kfoldCV.beta_tree_pls <- function(X, y, folds_idxs, max.d) {
       # Fit beta PLS model
       dummy <- ifelse(ytrain <= 0.2 , 1, 0)
       beta.data <- data.frame(cbind(ytrain,Pr_train,Rtrain,dummy))
-      beta.fit <- tryCatch(betareg::betatree(ytrain ~., ~dummy ,data = beta.data,
-                                            na.action="na.exclude"),
-                           error= function(e) {return(NA)})
+      # beta.fit <- tryCatch(betareg::betatree(ytrain ~., ~dummy ,data = beta.data,
+      #                                       na.action="na.exclude",link.phi = "log", link = "logit"),
+      #                      error= function(e) {return(NA)})
+      beta.fit <- betareg::betatree(ytrain ~., ~dummy ,data = beta.data,link.phi = "log", link = "logit")
       # Predictions in test
       dummy <- ifelse(ytest <= 0.2 , 1, 0)
       newdata <- data.frame(cbind(Pr_test,Rtest, dummy))

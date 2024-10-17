@@ -17,7 +17,7 @@ devtools::load_all()
 
 # Load data ---------------------------------------------------------------
 
-which_data <- 13 # Which data set will be used (see Table in Appendix A)
+which_data <- 1 # Which data set will be used (see Table in Appendix A)
 if (which_data == 1){
   data <- globalMPI.prediction.using.WID::dataset1
 } else if (which_data == 2){
@@ -28,9 +28,9 @@ if (which_data == 1){
 
 # Set parameters ----------------------------------------------------------
 
-target <- "A"    # Target variable
+target <- "MPI"    # Target variable
 nfolds <- 5        # Number of folds
-methods <- c("linear-pls","beta-pls",
+methods <- c("linear-pls","beta-pls","beta-tree-pls",
              "elasticnet","beta-elastic","beta-tree-elastic",
              "betaboost","xgboost")# by default all methods are used.
 

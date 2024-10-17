@@ -22,7 +22,7 @@ method.elasticnet <- function(data_train, y_train, data_test, folds_idxs, betare
     colnames(data_betareg)[1] <- "y"
     datatest <- data_test[ , colnames(data_test) %in% vars_elastic]
     # Fit beta regression model
-    beta_elastic.fit <- tryCatch(betareg::betareg(y ~ . , data = data_betareg), error= function(e) {return(NA)}  )
+    beta_elastic.fit <- tryCatch(betareg::betareg(y ~ . , data = data_betareg,link.phi = "log", link = "logit"), error= function(e) {return(NA)}  )
     # Predict over test data
     betareg_pred <- tryCatch(predict(beta_elastic.fit, newdata = datatest), error= function(e) {return(rep(NA,nrow(datatest)))}  )
     betareg_pred <- as.data.frame(betareg_pred)
@@ -38,7 +38,7 @@ method.elasticnet <- function(data_train, y_train, data_test, folds_idxs, betare
     colnames(data_betareg)[1] <- "y"
     datatest <- data_test[ , colnames(data_test) %in% vars_elastic]
     # Fit beta regression model
-    beta_tree_elastic.fit <- tryCatch(betareg::betatree(y ~ . , data = data_betareg), error= function(e) {return(NA)}  )
+    beta_tree_elastic.fit <- tryCatch(betareg::betatree(y ~ . , data = data_betareg,link.phi = "log", link = "logit"), error= function(e) {return(NA)}  )
     # Predict over test data
     beta_tree_pred <- tryCatch(predict(beta_tree_elastic.fit, newdata = datatest), error= function(e) {return(rep(NA,nrow(datatest)))}  )
     beta_tree_pred <- as.data.frame(beta_tree_pred)
@@ -89,7 +89,7 @@ method.linearpls <- function(data_train, y_train, data_test, folds_idxs, pls.dir
     # Estimate projections
   a.min <- hyperparam$d.min
   if(is.null(a.min)){d.min <- 1}
-  pls.projections <- chemometrics::pls1_nipals(Xtrain, y_train, a = a.min, scale = TRUE)
+  pls.projections <- chemometrics::pls1_nipals(Xtrain, y_train, a = a.min, scale = FALSE)
   datatrain <- as.data.frame(cbind(y_train, as.matrix(Xtrain) %*% pls.projections$W))
   colnames(datatrain)[1] <- "y"
   datatest <- data.frame(as.matrix(Xtest) %*% pls.projections$W)
@@ -128,7 +128,7 @@ method.beta_pls <- function(data_train, y_train, data_test, folds_idxs, pls.dire
   # Estimate projections
   a.min <- hyperparam$d.min
   if(is.null(a.min)){d.min <- 1}
-  pls.projections <- chemometrics::pls1_nipals(Xtrain, y_train, a = a.min, scale = TRUE)
+  pls.projections <- chemometrics::pls1_nipals(Xtrain, y_train, a = a.min, scale = FALSE)
   datatrain <- as.data.frame(cbind(y_train, as.matrix(Xtrain) %*% pls.projections$W))
   colnames(datatrain)[1] <- "y"
   datatest <- data.frame(as.matrix(Xtest) %*% pls.projections$W)
@@ -139,7 +139,7 @@ method.beta_pls <- function(data_train, y_train, data_test, folds_idxs, pls.dire
   datatest <- data.frame(datatest, Rtest)
 
   # Fit
-  beta_pls.fit <- tryCatch(betareg::betareg(y ~ . , datatrain), error= function(e) {return(NA)}  )
+  beta_pls.fit <- tryCatch(betareg::betareg(y ~ . , datatrain, link.phi = "log", link = "logit"), error= function(e) {return(NA)}  )
 
   # Predict over test data
   ypred <- tryCatch(predict(beta_pls.fit, newdata = datatest), error= function(e) {return(rep(NA,nrow(datatest)))}  )
@@ -166,7 +166,7 @@ method.beta_tree_pls <- function(data_train, y_train, data_test, folds_idxs, pls
   # Estimate projections
   a.min <- hyperparam$d.min
   if(is.null(a.min)){d.min <- 1}
-  pls.projections <- chemometrics::pls1_nipals(Xtrain, y_train, a = a.min, scale = TRUE)
+  pls.projections <- chemometrics::pls1_nipals(Xtrain, y_train, a = a.min, scale = FALSE)
   datatrain <- as.data.frame(cbind(y_train, as.matrix(Xtrain) %*% pls.projections$W))
   colnames(datatrain)[1] <- "y"
   #datatrain$dummy <-  ifelse(y_train <= 0.2 , 1, 0)
@@ -179,7 +179,7 @@ method.beta_tree_pls <- function(data_train, y_train, data_test, folds_idxs, pls
   datatest <- data.frame(datatest, Rtest)
 
   # Fit
-  beta_tree_pls.fit <- tryCatch(betareg::betatree(y ~ . ,~ dummy , datatrain), error= function(e) {return(NA)}  )
+  beta_tree_pls.fit <- tryCatch(betareg::betatree(y ~ . ,~ dummy , datatrain, link.phi = "log", link = "logit"), error= function(e) {return(NA)}  )
 
   # Predict over test data
   ypred <- tryCatch(predict(beta_tree_pls.fit, newdata = datatest), error= function(e) {return(rep(NA,nrow(datatest)))}  )
