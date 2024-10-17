@@ -7,13 +7,13 @@
 # and target variable.
 
 # Install the last version ------------------------------------------------
-devtools::load_all()
-#devtools::install_github("https://github.com/girelaignacio/globalMPI_prediction_using_WID")
+#devtools::load_all()
+devtools::install_github("https://github.com/girelaignacio/globalMPI_prediction_using_WID")
 
 
 # Load package ------------------------------------------------------------
 
-#<  library(globalMPI.prediction.using.WID)
+library(globalMPI.prediction.using.WID)
 
 # Load data ---------------------------------------------------------------
 
